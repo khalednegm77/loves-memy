@@ -52,6 +52,13 @@ const defaultContent = {
     signature: "khaled & amyy",
     tagline: "Forever & always · 20.10.2025",
   },
+  envelope: {
+    button: "Open Your Love Letter",
+    letter_heading: "With all my love",
+    letter_names: "khaled & amyy",
+    letter_footer: "Forever & Always",
+    welcome_message: "Welcome to our story",
+  },
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined)

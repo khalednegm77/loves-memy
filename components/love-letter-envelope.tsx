@@ -1,13 +1,23 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Heart } from "lucide-react"
+import { useState } from "react"
+import { useContent } from "./content-context"
 
 type LoveLetterEnvelopeProps = {
   onOpen: () => void
 }
 
 export function LoveLetterEnvelope({ onOpen }: LoveLetterEnvelopeProps) {
+  const { content } = useContent()
+  const envelope = content.envelope || {}
+
+  const button = (envelope.button as string) || "Open Your Love Letter"
+  const letterHeading = (envelope.letter_heading as string) || "With all my love"
+  const letterNames = (envelope.letter_names as string) || "khaled & amyy"
+  const letterFooter = (envelope.letter_footer as string) || "Forever & Always"
+  const welcomeMessage = (envelope.welcome_message as string) || "Welcome to our story"
+
   const [stage, setStage] = useState<"sealed" | "opening" | "open" | "revealing">("sealed")
   const [showButton, setShowButton] = useState(true)
 
@@ -107,10 +117,10 @@ export function LoveLetterEnvelope({ onOpen }: LoveLetterEnvelopeProps) {
           >
             <div className="h-full bg-gradient-to-b from-[#fefcfa] to-[#f5e6d3] p-6 flex flex-col items-center justify-center text-center border border-[#e8d4b8]">
               <Heart className="h-6 w-6 fill-primary text-primary mb-3" />
-              <p className="font-serif text-lg text-foreground">With all my love</p>
-              <p className="mt-2 text-sm text-muted-foreground font-serif italic">khaled & amyy</p>
+              <p className="font-serif text-lg text-foreground">{letterHeading}</p>
+              <p className="mt-2 text-sm text-muted-foreground font-serif italic">{letterNames}</p>
               <div className="mt-4 w-16 h-px bg-primary/30" />
-              <p className="mt-3 text-xs text-muted-foreground">Forever & Always</p>
+              <p className="mt-3 text-xs text-muted-foreground">{letterFooter}</p>
             </div>
           </div>
         </div>
@@ -121,14 +131,14 @@ export function LoveLetterEnvelope({ onOpen }: LoveLetterEnvelopeProps) {
             onClick={handleOpen}
             className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-serif text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
           >
-            Open Your Love Letter
+            {button}
           </button>
         )}
 
         {/* Message */}
         {stage === "open" && (
           <p className="mt-8 font-serif text-xl text-foreground animate-fade-in">
-            Welcome to our story
+            {welcomeMessage}
           </p>
         )}
       </div>

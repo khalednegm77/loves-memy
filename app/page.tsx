@@ -1,24 +1,15 @@
 "use client"
 
+import { AuthProvider } from "@/components/auth-context"
 import { ContentProvider } from "@/components/content-context"
-import { Hero } from "@/components/hero"
-import { LoveCounter } from "@/components/love-counter"
-import { Gallery } from "@/components/gallery"
-import { Videos } from "@/components/videos"
-import { Reasons } from "@/components/reasons"
-import { Closing } from "@/components/closing"
+import { AppWrapper } from "@/components/app-wrapper"
 
 export default function Page() {
   return (
-    <ContentProvider>
-      <main className="min-h-screen bg-background">
-        <Hero />
-        <LoveCounter />
-        <Gallery />
-        <Videos />
-        <Reasons />
-        <Closing />
-      </main>
-    </ContentProvider>
+    <AuthProvider>
+      <ContentProvider>
+        <AppWrapper />
+      </ContentProvider>
+    </AuthProvider>
   )
 }
