@@ -11,17 +11,29 @@ export function LoginForm() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setInfo(null)
     setLoading(true)
 
     try {
-      const fn = isSignUp ? signUp : signIn
-      const { error } = await fn(email, password)
-      if (error) setError(isSignUp ? "Could not create account." : "Incorrect email or password.")
+      if (isSignUp) {
+        const { error } = await signUp(email, password)
+        if (error) {
+          setError(error.message)
+        } else {
+          // Supabase may require email confirmation before the session is active
+          setInfo("Account created! Check your email for a confirmation link, then sign in.")
+          setIsSignUp(false)
+        }
+      } else {
+        const { error } = await signIn(email, password)
+        if (error) setError(error.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -51,6 +63,11 @@ export function LoginForm() {
           {error && (
             <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               {error}
+            </div>
+          )}
+          {info && (
+            <div className="rounded-lg bg-primary/10 p-3 text-sm text-primary">
+              {info}
             </div>
           )}
 
