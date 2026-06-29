@@ -5,8 +5,7 @@ import { Heart, Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { useAuth } from "./auth-context"
 
 export function LoginForm() {
-  const { signIn, signUp } = useAuth()
-  const [isSignUp, setIsSignUp] = useState(false)
+  const { signIn } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -18,11 +17,10 @@ export function LoginForm() {
     setError(null)
     setLoading(true)
 
-    const fn = isSignUp ? signUp : signIn
-    const { error } = await fn(email, password)
+    const { error } = await signIn(email, password)
 
     if (error) {
-      setError(error.message)
+      setError("Incorrect email or password.")
       setLoading(false)
     }
   }
@@ -42,9 +40,7 @@ export function LoginForm() {
           <h1 className="font-serif text-3xl font-semibold text-foreground">
             khaled <span className="text-primary">&</span> amyy
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            {isSignUp ? "Create your account" : "Welcome to our story"}
-          </p>
+          <p className="mt-2 text-muted-foreground">Welcome to our story</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-lg">
@@ -66,6 +62,7 @@ export function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
                 className="w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
                 placeholder="your@email.com"
               />
@@ -84,7 +81,7 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                autoComplete="current-password"
                 className="w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-10 text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
                 placeholder="••••••••"
               />
@@ -103,34 +100,8 @@ export function LoginForm() {
             disabled={loading}
             className="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+            {loading ? "Please wait…" : "Sign In"}
           </button>
-
-          <div className="text-center text-sm text-muted-foreground">
-            {isSignUp ? (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(false)}
-                  className="text-primary hover:underline"
-                >
-                  Sign in
-                </button>
-              </>
-            ) : (
-              <>
-                Don&apos;t have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(true)}
-                  className="text-primary hover:underline"
-                >
-                  Create one
-                </button>
-              </>
-            )}
-          </div>
         </form>
       </div>
     </div>
