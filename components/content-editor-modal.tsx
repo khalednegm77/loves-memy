@@ -21,77 +21,50 @@ export function ContentEditorButton() {
       >
         <Settings className="h-5 w-5" />
       </button>
-
       <ContentEditorModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   )
 }
 
-type ContentEditorModalProps = {
-  isOpen: boolean
-  onClose: () => void
-}
-
+type ContentEditorModalProps = { isOpen: boolean; onClose: () => void }
 type ReasonItem = { title: string; text: string }
 
-// ── helpers ──────────────────────────────────────────────────────────────────
-
-/** Upserts a section, returns true on success, throws on error */
-async function upsertSection(
-  section: string,
-  updatedContent: Record<string, unknown>
-): Promise<void> {
+async function upsertSection(section: string, updatedContent: Record<string, unknown>): Promise<void> {
   const { error } = await supabase
     .from("site_content")
     .upsert({ section, content: updatedContent }, { onConflict: "section" })
   if (error) throw error
 }
 
-// ── Field labels ──────────────────────────────────────────────────────────────
-
 const FIELD_LABELS: Record<string, Record<string, string>> = {
   hero: {
-    subtitle: "Badge text",
-    title1: "Name 1",
-    title2: "Name 2",
-    description: "Description",
-    cta: "Button text",
+    subtitle: "Badge text", title1: "Name 1", title2: "Name 2",
+    description: "Description", cta: "Button text",
   },
   counter: {
     anniversary_date: "Anniversary date (YYYY-MM-DD)",
-    subtitle: "Subtitle",
-    title: "Heading",
-    description: "Description",
+    subtitle: "Subtitle", title: "Heading", description: "Description",
   },
-  gallery: {
-    subtitle: "Subtitle",
-    title: "Heading",
+  countdown: {
+    subtitle: "Subtitle", title: "Heading", description: "Description",
   },
-  videos: {
-    subtitle: "Subtitle",
-    title: "Heading",
-    description: "Caption",
+  gallery: { subtitle: "Subtitle", title: "Heading" },
+  videos: { subtitle: "Subtitle", title: "Heading", description: "Caption" },
+  reasons: { subtitle: "Subtitle", title: "Heading" },
+  letter: {
+    subtitle: "Subtitle", title: "Heading",
+    from: "From name", to: "To name", date: "Date shown", message: "Letter message",
   },
-  reasons: {
-    subtitle: "Subtitle",
-    title: "Heading",
-  },
-  closing: {
-    quote: "Quote",
-    description: "Description",
-    signature: "Signature",
-    tagline: "Tagline",
-  },
+  bucketlist: { subtitle: "Subtitle", title: "Heading" },
+  timeline: { subtitle: "Subtitle", title: "Heading" },
+  closing: { quote: "Quote", description: "Description", signature: "Signature", tagline: "Tagline" },
   envelope: {
-    button: "Button text",
-    letter_heading: "Letter heading",
-    letter_names: "Names on letter",
-    letter_footer: "Letter footer",
+    button: "Button text", letter_heading: "Letter heading",
+    letter_names: "Names on letter", letter_footer: "Letter footer",
     welcome_message: "Welcome message",
   },
+  dayliketoday: { title: "Heading", message: "Message", cta: "Button text" },
 }
-
-// ── Main modal ────────────────────────────────────────────────────────────────
 
 function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
   const { content, refreshContent } = useContent()
@@ -104,14 +77,18 @@ function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
   const sections = [
     { key: "hero", label: "Hero" },
     { key: "counter", label: "Love Counter" },
+    { key: "countdown", label: "Anniversary Countdown" },
     { key: "gallery", label: "Gallery" },
     { key: "videos", label: "Videos" },
     { key: "reasons", label: "Reasons I Love You" },
+    { key: "letter", label: "Love Letter" },
+    { key: "bucketlist", label: "Bucket List" },
+    { key: "timeline", label: "Our Timeline" },
     { key: "closing", label: "Closing" },
-    { key: "envelope", label: "Love Letter Envelope" },
+    { key: "envelope", label: "Intro Envelope" },
+    { key: "dayliketoday", label: "Anniversary Day Popup" },
   ]
 
-  /** Returns true on success, false on failure */
   const handleSaveField = async (section: string, key: string, value: string): Promise<boolean> => {
     setSaving(true)
     setSaveError(null)
@@ -122,7 +99,7 @@ function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
       return true
     } catch (err) {
       console.error("Failed to save:", err)
-      setSaveError("Failed to save changes. Please try again.")
+      setSaveError("Failed to save. Please try again.")
       return false
     } finally {
       setSaving(false)
@@ -139,7 +116,7 @@ function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
       return true
     } catch (err) {
       console.error("Failed to save:", err)
-      setSaveError("Failed to save changes. Please try again.")
+      setSaveError("Failed to save. Please try again.")
       return false
     } finally {
       setSaving(false)
@@ -149,43 +126,33 @@ function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-background/80 backdrop-blur-sm">
       <div className="mx-auto max-w-2xl p-4 pb-24">
-        {/* Header */}
         <div className="sticky top-0 z-10 mb-4 flex items-center justify-between rounded-xl border border-border bg-card/95 px-5 py-3 shadow-sm backdrop-blur-md">
           <h2 className="font-serif text-xl font-semibold">Edit Site Content</h2>
-          <button
-            onClick={onClose}
-            className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
+          <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {saveError && (
-          <div className="mb-4 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {saveError}
-          </div>
+          <div className="mb-4 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{saveError}</div>
         )}
 
         <div className="space-y-3">
           {sections.map(({ key, label }) => {
-            const isOpen = openSection === key
+            const isSectionOpen = openSection === key
             const sectionContent = content[key] || {}
-
             return (
               <div key={key} className="rounded-xl border border-border bg-card overflow-hidden">
-                {/* Accordion header */}
                 <button
-                  onClick={() => setOpenSection(isOpen ? null : key)}
+                  onClick={() => setOpenSection(isSectionOpen ? null : key)}
                   className="flex w-full items-center justify-between px-5 py-4 text-left font-medium hover:bg-muted/50 transition-colors"
                 >
                   <span className="font-serif">{label}</span>
-                  {isOpen
+                  {isSectionOpen
                     ? <ChevronUp className="h-4 w-4 text-muted-foreground" />
                     : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
                 </button>
-
-                {/* Accordion body */}
-                {isOpen && (
+                {isSectionOpen && (
                   <div className="border-t border-border px-5 pb-5 pt-4">
                     {key === "reasons" ? (
                       <ReasonsEditor
@@ -213,13 +180,8 @@ function ContentEditorModal({ isOpen, onClose }: ContentEditorModalProps) {
   )
 }
 
-// ── Simple fields editor ──────────────────────────────────────────────────────
-
 function SimpleFieldsEditor({
-  sectionKey,
-  sectionContent,
-  onSave,
-  saving,
+  sectionKey, sectionContent, onSave, saving,
 }: {
   sectionKey: string
   sectionContent: Record<string, unknown>
@@ -228,7 +190,7 @@ function SimpleFieldsEditor({
 }) {
   const labels = FIELD_LABELS[sectionKey] || {}
 
-  const stringValues = (sc: Record<string, unknown>) => {
+  const toStrings = (sc: Record<string, unknown>) => {
     const init: Record<string, string> = {}
     Object.entries(sc).forEach(([k, v]) => {
       if (k === "items") return
@@ -237,12 +199,11 @@ function SimpleFieldsEditor({
     return init
   }
 
-  const [drafts, setDrafts] = useState<Record<string, string>>(() => stringValues(sectionContent))
+  const [drafts, setDrafts] = useState<Record<string, string>>(() => toStrings(sectionContent))
   const [saved, setSaved] = useState<Record<string, boolean>>({})
 
-  // Resync when upstream content changes (e.g. after refreshContent)
   useEffect(() => {
-    setDrafts(stringValues(sectionContent))
+    setDrafts(toStrings(sectionContent))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(sectionContent)])
 
@@ -262,17 +223,14 @@ function SimpleFieldsEditor({
           const label = labels[fieldKey] || fieldKey
           const draft = drafts[fieldKey] ?? ""
           const isMultiline = draft.length > 80 || draft.includes("\n")
-
           return (
             <div key={fieldKey} className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {label}
-              </label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
               {isMultiline ? (
                 <textarea
                   value={draft}
                   onChange={(e) => setDrafts((d) => ({ ...d, [fieldKey]: e.target.value }))}
-                  rows={3}
+                  rows={fieldKey === "message" ? 8 : 3}
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none"
                 />
               ) : (
@@ -302,13 +260,8 @@ function SimpleFieldsEditor({
   )
 }
 
-// ── Reasons editor ────────────────────────────────────────────────────────────
-
 function ReasonsEditor({
-  sectionContent,
-  onSaveField,
-  onSaveItems,
-  saving,
+  sectionContent, onSaveField, onSaveItems, saving,
 }: {
   sectionContent: Record<string, unknown>
   onSaveField: (key: string, value: string) => Promise<boolean>
@@ -316,15 +269,12 @@ function ReasonsEditor({
   saving: boolean
 }) {
   const labels = FIELD_LABELS["reasons"] || {}
-
   const [subtitleDraft, setSubtitleDraft] = useState((sectionContent.subtitle as string) || "")
   const [titleDraft, setTitleDraft] = useState((sectionContent.title as string) || "")
   const [headerSaved, setHeaderSaved] = useState<Record<string, boolean>>({})
-
   const [items, setItems] = useState<ReasonItem[]>((sectionContent.items as ReasonItem[]) || [])
   const [itemsSaved, setItemsSaved] = useState(false)
 
-  // Resync when upstream content changes
   useEffect(() => {
     setSubtitleDraft((sectionContent.subtitle as string) || "")
     setTitleDraft((sectionContent.title as string) || "")
@@ -340,17 +290,8 @@ function ReasonsEditor({
     }
   }
 
-  const updateItem = (index: number, field: keyof ReasonItem, value: string) => {
+  const updateItem = (index: number, field: keyof ReasonItem, value: string) =>
     setItems((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
-  }
-
-  const addItem = () => {
-    setItems((prev) => [...prev, { title: "New reason", text: "Describe why you love them." }])
-  }
-
-  const removeItem = (index: number) => {
-    setItems((prev) => prev.filter((_, i) => i !== index))
-  }
 
   const handleSaveItems = async () => {
     const ok = await onSaveItems(items)
@@ -362,18 +303,14 @@ function ReasonsEditor({
 
   return (
     <div className="space-y-5">
-      {/* Subtitle & Title */}
       {[
         { key: "subtitle", label: labels.subtitle || "Subtitle", value: subtitleDraft, set: setSubtitleDraft },
         { key: "title", label: labels.title || "Heading", value: titleDraft, set: setTitleDraft },
       ].map(({ key, label, value, set }) => (
         <div key={key} className="space-y-1.5">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {label}
-          </label>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
           <input
-            type="text"
-            value={value}
+            type="text" value={value}
             onChange={(e) => set(e.target.value)}
             className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
           />
@@ -381,9 +318,7 @@ function ReasonsEditor({
             onClick={() => handleSaveHeader(key, value)}
             disabled={saving}
             className={`mt-1 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${
-              headerSaved[key]
-                ? "bg-green-500/15 text-green-700 dark:text-green-400"
-                : "bg-primary/10 text-primary hover:bg-primary/20"
+              headerSaved[key] ? "bg-green-500/15 text-green-700 dark:text-green-400" : "bg-primary/10 text-primary hover:bg-primary/20"
             }`}
           >
             <Save className="h-3 w-3" />
@@ -392,20 +327,16 @@ function ReasonsEditor({
         </div>
       ))}
 
-      {/* Reason cards */}
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Reason cards
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Reason cards</p>
         <div className="space-y-3">
           {items.map((item, index) => (
             <div key={index} className="rounded-lg border border-input bg-background p-3 space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-muted-foreground font-medium">Card {index + 1}</span>
                 <button
-                  onClick={() => removeItem(index)}
+                  onClick={() => setItems((prev) => prev.filter((_, i) => i !== index))}
                   className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                  aria-label="Remove card"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -413,8 +344,7 @@ function ReasonsEditor({
               <div className="space-y-1">
                 <label className="block text-xs text-muted-foreground">Title</label>
                 <input
-                  type="text"
-                  value={item.title}
+                  type="text" value={item.title}
                   onChange={(e) => updateItem(index, "title", e.target.value)}
                   className="w-full rounded border border-input bg-card px-2.5 py-1.5 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
                 />
@@ -431,22 +361,17 @@ function ReasonsEditor({
             </div>
           ))}
         </div>
-
         <button
-          onClick={addItem}
+          onClick={() => setItems((prev) => [...prev, { title: "New reason", text: "Describe why you love them." }])}
           className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2 text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors"
         >
-          <Plus className="h-4 w-4" />
-          Add a reason
+          <Plus className="h-4 w-4" /> Add a reason
         </button>
-
         <button
           onClick={handleSaveItems}
           disabled={saving}
           className={`mt-1 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${
-            itemsSaved
-              ? "bg-green-500/15 text-green-700 dark:text-green-400"
-              : "bg-primary/10 text-primary hover:bg-primary/20"
+            itemsSaved ? "bg-green-500/15 text-green-700 dark:text-green-400" : "bg-primary/10 text-primary hover:bg-primary/20"
           }`}
         >
           <Save className="h-3 w-3" />

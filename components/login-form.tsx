@@ -17,10 +17,10 @@ export function LoginForm() {
     setError(null)
     setLoading(true)
 
-    const { error } = await signIn(email, password)
-
-    if (error) {
-      setError("Incorrect email or password.")
+    try {
+      const { error } = await signIn(email, password)
+      if (error) setError("Incorrect email or password.")
+    } finally {
       setLoading(false)
     }
   }
