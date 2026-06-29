@@ -1,14 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// When credentials are missing (e.g. local dev without .env) we still create the
-// client with placeholder values so the module doesn't throw at import time.
-// All actual network calls will fail gracefully and be caught by the callers.
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-anon-key',
-)
+// Validate that we have a proper URL before calling createClient,
+// which throws synchronously on invalid URLs.
+const isValidUrl = (s: string) => {
+  try { return Boolean(new URL(s)) } catch { return false }
+}
 
-export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
+const url = isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder.supabase.co'
+const key = supabaseAnonKey || 'placeholder-anon-key'
+
+export const supabase = createClient(url, key)
+export const supabaseConfigured = isValidUrl(supabaseUrl) && Boolean(supabaseAnonKey)
