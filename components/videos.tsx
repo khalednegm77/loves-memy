@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react"
 import { Film, Volume2, VolumeX, VolumeOff } from "lucide-react"
 import { useContent } from "./content-context"
 
-const videos: { src: string; caption: string }[] = [
+const allVideos: { src: string; caption: string }[] = [
   { src: "/videos/clip-1.mp4", caption: "Us, in motion" },
   { src: "/videos/clip-2.mp4", caption: "Caught mid-laugh" },
   { src: "/videos/clip-3.mp4", caption: "Just being us" },
@@ -19,16 +19,16 @@ const videos: { src: string; caption: string }[] = [
 export function Videos() {
   const { content } = useContent()
   const videosContent = content.videos || {}
+  const [errored, setErrored] = useState<Record<string, boolean>>({})
+  const videos = allVideos.filter((v) => !errored[v.src])
+
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [allMuted, setAllMuted] = useState(true)
 
-  // Ensure all videos start muted
   useEffect(() => {
     videoRefs.current.forEach((video) => {
-      if (video) {
-        video.muted = true
-      }
+      if (video) video.muted = true
     })
   }, [])
 
@@ -37,16 +37,12 @@ export function Videos() {
     if (!video) return
 
     if (activeIndex === index && !video.muted) {
-      // Currently playing with sound, mute it
       video.muted = true
       setActiveIndex(null)
       setAllMuted(true)
     } else {
-      // Mute all others and enable sound for this one
       videoRefs.current.forEach((v, i) => {
-        if (v) {
-          v.muted = i !== index
-        }
+        if (v) v.muted = i !== index
       })
       video.muted = false
       video.volume = 1
@@ -58,9 +54,7 @@ export function Videos() {
 
   function handleMuteAll() {
     videoRefs.current.forEach((video) => {
-      if (video) {
-        video.muted = true
-      }
+      if (video) video.muted = true
     })
     setActiveIndex(null)
     setAllMuted(true)
@@ -75,16 +69,15 @@ export function Videos() {
         <h2 className="text-balance font-serif text-4xl font-semibold text-foreground sm:text-5xl">
           {videosContent.title as string}
         </h2>
-        {videos.length > 0 ? (
+        {videos.length > 0 && (
           <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
             {videosContent.description as string}
           </p>
-        ) : null}
+        )}
       </div>
 
       {videos.length > 0 ? (
         <>
-          {/* Mute All Button */}
           <div className="mb-6 flex justify-end">
             <button
               onClick={handleMuteAll}
@@ -112,23 +105,18 @@ export function Videos() {
                     type="button"
                     onClick={() => handleToggleSound(index)}
                     className="block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label={
-                      isActive
-                        ? `Mute ${video.caption}`
-                        : `Play ${video.caption} with sound`
-                    }
+                    aria-label={isActive ? `Mute ${video.caption}` : `Play ${video.caption} with sound`}
                   >
                     <video
-                      ref={(el) => {
-                        videoRefs.current[index] = el
-                      }}
+                      ref={(el) => { videoRefs.current[index] = el }}
                       src={video.src}
                       autoPlay
                       muted
                       loop
                       playsInline
-                      preload="auto"
+                      preload="metadata"
                       className="aspect-[9/16] h-full w-full object-cover"
+                      onError={() => setErrored((prev) => ({ ...prev, [video.src]: true }))}
                     />
                     <span className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/55 text-background backdrop-blur-sm transition-colors group-hover:bg-foreground/70">
                       {isActive ? (
@@ -153,9 +141,9 @@ export function Videos() {
           </span>
           <p className="font-serif text-2xl text-foreground">Your clips will live here</p>
           <p className="mt-2 max-w-md text-pretty leading-relaxed text-muted-foreground">
-            Send me your video clips and I&apos;ll add them to this section as
-            softly looping memories. Once they&apos;re in, a tap will turn on the
-            sound.
+            Add your video clips to the <code className="text-xs">/public/videos/</code> folder named{" "}
+            <code className="text-xs">clip-1.mp4</code> through{" "}
+            <code className="text-xs">clip-9.mp4</code> and they&apos;ll appear here.
           </p>
         </div>
       )}

@@ -1,25 +1,57 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Heart } from "lucide-react"
 import { useContent } from "./content-context"
 import { supabase } from "@/lib/supabase-client"
 
 type BucketItem = { text: string; done: boolean; emoji: string }
 
+const LS_KEY = "bucketlist_checked"
+
+function loadLocal(): Record<number, boolean> {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || "{}")
+  } catch {
+    return {}
+  }
+}
+
+function saveLocal(map: Record<number, boolean>) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(map))
+  } catch { /* ignore */ }
+}
+
 export function BucketListSection() {
   const { content, refreshContent } = useContent()
   const bucketlist = content.bucketlist || {}
+  const baseItems = (bucketlist.items as BucketItem[]) || []
+
+  // Local overrides from localStorage (index → done)
+  const [localOverrides, setLocalOverrides] = useState<Record<number, boolean>>({})
   const [toggling, setToggling] = useState<number | null>(null)
 
-  const items = (bucketlist.items as BucketItem[]) || []
+  useEffect(() => {
+    setLocalOverrides(loadLocal())
+  }, [])
+
+  // Merge base items with local overrides
+  const items = baseItems.map((item, i) =>
+    i in localOverrides ? { ...item, done: localOverrides[i] } : item
+  )
 
   const handleToggle = async (index: number) => {
     if (toggling !== null) return
     setToggling(index)
 
+    const newDone = !items[index].done
+    const newOverrides = { ...localOverrides, [index]: newDone }
+    setLocalOverrides(newOverrides)
+    saveLocal(newOverrides)
+
     const updated = items.map((item, i) =>
-      i === index ? { ...item, done: !item.done } : item
+      i === index ? { ...item, done: newDone } : item
     )
 
     try {
@@ -29,11 +61,15 @@ export function BucketListSection() {
           { section: "bucketlist", content: { ...bucketlist, items: updated } },
           { onConflict: "section" }
         )
-      if (error) throw error
-      await refreshContent()
-    } catch (err) {
-      console.error("Failed to save bucket list:", err)
-    } finally {
+      if (!error) {
+        // If DB saved successfully, clear local overrides for this item
+        const cleared = { ...newOverrides }
+        delete cleared[index]
+        setLocalOverrides(cleared)
+        saveLocal(cleared)
+        await refreshContent()
+      }
+    } catch { /* local state already applied */ } finally {
       setToggling(null)
     }
   }
@@ -51,7 +87,6 @@ export function BucketListSection() {
           {bucketlist.title as string}
         </h2>
 
-        {/* Progress bar */}
         <div className="mx-auto mt-6 max-w-xs">
           <div className="mb-2 flex justify-between text-xs text-muted-foreground">
             <span>{done} completed</span>
@@ -78,7 +113,6 @@ export function BucketListSection() {
                 : "border-border bg-card hover:border-primary/30"
             }`}
           >
-            {/* Checkbox */}
             <span
               className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 transition-all ${
                 item.done
@@ -93,10 +127,8 @@ export function BucketListSection() {
               )}
             </span>
 
-            {/* Emoji */}
             <span className="text-2xl">{item.emoji}</span>
 
-            {/* Text */}
             <span
               className={`font-serif text-base leading-snug transition-colors ${
                 item.done

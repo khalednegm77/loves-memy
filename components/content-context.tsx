@@ -57,7 +57,7 @@ const defaultContent = {
     to: "meemy",
     date: "20.10.2025",
     message:
-      'bosy b"a ya meemy ya meemy\n\nana m4 3aref abda" mneen bs bgd ana bhb a3ee4 kol haga m3aky w sa3at kteer awy bgd lma b"3od lwahdy bfdl afakar feh hyatna m3 b3d ezay m4 3aref at5ylha mn 8eerek bgd\n\nkhalas rsmt most"nly 3leeky enty b"eety a8la haga feh hyaty w kol hyaty b34" kol tafseela feky bgd mn as8arhom l akbarhom\n\nbhb dehkna w hezarna w mrazytna feh b3d tool el wa"t bhb habtl bhb el tefla el gwaky awy bgd\n\nw 3omry ma tl3t 4a5syty deh m3 7d 8erek bgd w bt3rfy ttl3eny mn aw7sh mood mmkn awslo feh sanya bgd\n\nenty geety khalyty 7yaty b\'t helwa awy w nesfsy akmla m3aky bgd w bjbk awy ya meemy bgd.',
+      'bosy b"a ya meemy ya meemy\n\nana m4 3aref abda" mneen bs bgd ana bhb a3ee4 kol haga m3aky w sa3at kteer awy bgd lma b"3od lwahdy bfdl afakar feh hyatna m3 b3d ezay m4 3aref at5ylha mn 8eerek bgd\n\nkhalas rsmt most"nly 3leeky enty b"eety a8la haga feh hyaty w kol hyaty b34" kol tafseela feky bgd mn as8arhom l akbarhom\n\nbhb dehkna w hezarna w mrazytna feh b3d tool el wa"t bhb habtl bhb el tefla el gwaky awy bgd\n\nw 3omry ma tl3t 4a5syty deh m3 7d 8erek bgd w bt3rfy ttl3eny mn aw7sh mood mmkn awslo feh sanya bgd\n\nenty geety khalyty 7yaty b\'t helwa awy w nesfsy akmla m3aky bgd w bhbk awy ya meemy bgd.',
   },
   bucketlist: {
     subtitle: "Our dreams together",
@@ -156,7 +156,7 @@ const defaultContent = {
   closing: {
     quote: "In a sea of people, my eyes will always search for you.",
     description:
-      "Thank you for every laugh, every hug, and every quiet moment in between. Here's to us — today, on our anniversary, and for all the years still to come.",
+      "Thank you for every laugh, every hug, and every quiet moment in between. Here's to us — every day, not just our anniversary.",
     signature: "khaled & amyy",
     tagline: "Forever & always · 20.10.2025",
   },
