@@ -192,8 +192,13 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         })
         setContent({ ...defaultContent, ...contentMap })
       }
-    } catch (err) {
-      console.error("Failed to fetch content:", err)
+    } catch (err: unknown) {
+      // PGRST205 means the site_content table hasn't been created yet —
+      // the app falls back to defaultContent, so no error badge needed.
+      const code = (err as { code?: string })?.code
+      if (code !== "PGRST205") {
+        console.error("Failed to fetch content:", err)
+      }
     } finally {
       setLoading(false)
     }
