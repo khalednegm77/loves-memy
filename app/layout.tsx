@@ -17,7 +17,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'khaled & amyy — Our Love Story',
   description: 'A little corner of the internet for khaled & amyy, celebrating every day we get to love each other.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {

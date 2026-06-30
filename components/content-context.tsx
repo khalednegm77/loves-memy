@@ -156,9 +156,9 @@ const defaultContent = {
   closing: {
     quote: "In a sea of people, my eyes will always search for you.",
     description:
-      "Thank you for every laugh, every hug, and every quiet moment in between. Here's to us — every day, not just our anniversary.",
+      "Thank you for every laugh, every hug, and every quiet moment in between. You are my favorite person, my best friend, and my greatest adventure. I love you more than words could ever say.",
     signature: "khaled & amyy",
-    tagline: "Forever & always · 20.10.2025",
+    tagline: "Forever & always",
   },
   envelope: {
     button: "Open Your Love Letter",
