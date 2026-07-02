@@ -5,15 +5,17 @@ import { Film, Volume2, VolumeX, VolumeOff } from "lucide-react"
 import { useContent } from "./content-context"
 
 const allVideos: { src: string; caption: string }[] = [
-  { src: "/videos/clip-1.mp4", caption: "Us, in motion" },
-  { src: "/videos/clip-2.mp4", caption: "Caught mid-laugh" },
-  { src: "/videos/clip-3.mp4", caption: "Just being us" },
-  { src: "/videos/clip-4.mp4", caption: "Silly little moments" },
-  { src: "/videos/clip-5.mp4", caption: "Our kind of fun" },
-  { src: "/videos/clip-6.mp4", caption: "Never a dull second" },
-  { src: "/videos/clip-7.mp4", caption: "Forever like this" },
-  { src: "/videos/clip-8.mp4", caption: "My favorite person" },
-  { src: "/videos/clip-9.mp4", caption: "Always you and me" },
+  { src: "/videos/Snapchat-1109714542.mp4", caption: "Us, in motion" },
+  { src: "/videos/Snapchat-1198825990.mp4", caption: "Caught mid-laugh" },
+  { src: "/videos/Snapchat-1416293601.mp4", caption: "Just being us" },
+  { src: "/videos/Snapchat-1712190426.mp4", caption: "Silly little moments" },
+  { src: "/videos/Snapchat-1762725773.mp4", caption: "Our kind of fun" },
+  { src: "/videos/Snapchat-285810565.mp4", caption: "Never a dull second" },
+  { src: "/videos/Snapchat-386119415.mp4", caption: "Forever like this" },
+  { src: "/videos/Snapchat-444916219.mp4", caption: "My favorite person" },
+  { src: "/videos/Snapchat-460482894.mp4", caption: "Always you and me" },
+  { src: "/videos/Snapchat-524881199.mp4", caption: "My favorite view" },
+  { src: "/videos/VID-20260701-WA0010.mp4", caption: "Together, always" },
 ]
 
 export function Videos() {
