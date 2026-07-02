@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useContent } from "./content-context"
-import { supabase } from "@/lib/supabase-client"
+import { supabase, supabaseConfigured } from "@/lib/supabase-client"
 
 type BucketItem = { text: string; done: boolean; emoji: string }
 
@@ -46,6 +46,11 @@ export function BucketListSection() {
     const updated = items.map((item, i) =>
       i === index ? { ...item, done: newDone } : item
     )
+
+    // Skip Supabase update if not configured
+    if (!supabaseConfigured) {
+      return
+    }
 
     try {
       const { error } = await supabase
