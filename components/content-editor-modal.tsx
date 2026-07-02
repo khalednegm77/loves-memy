@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { X, Save, Settings, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react"
 import { useContent } from "./content-context"
 import { useAuth } from "./auth-context"
-import { supabase } from "@/lib/supabase-client"
+import { supabase, supabaseConfigured } from "@/lib/supabase-client"
 
 export function ContentEditorButton() {
   const { user } = useAuth()
@@ -30,6 +30,11 @@ type ContentEditorModalProps = { isOpen: boolean; onClose: () => void }
 type ReasonItem = { title: string; text: string }
 
 async function upsertSection(section: string, updatedContent: Record<string, unknown>): Promise<void> {
+  // Skip Supabase update if not configured
+  if (!supabaseConfigured) {
+    return
+  }
+  
   const { error } = await supabase
     .from("site_content")
     .upsert({ section, content: updatedContent }, { onConflict: "section" })
