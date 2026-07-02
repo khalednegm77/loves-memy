@@ -18,6 +18,8 @@ const photos = [
   { src: "/photo/Snapchat-1574178237.jpg", caption: "Pure joy with you" },
   { src: "/photo/Snapchat-1614855115.jpg", caption: "A love like ours" },
   { src: "/photo/IMG-20260701-WA0005.jpg", caption: "Always and forever" },
+  { src: "/photo/Snapchat-1797008326.jpg", caption: "Being silly with you" },
+  { src: "/photo/Snapchat-1931337413.jpg", caption: "My favorite smile" },
 ]
 
 export function Gallery() {
