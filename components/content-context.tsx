@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react"
-import { supabase } from "@/lib/supabase-client"
+import { supabase, supabaseConfigured } from "@/lib/supabase-client"
 
 type ContentContextType = {
   content: Record<string, Record<string, unknown>>
@@ -183,6 +183,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   const fetchContent = async () => {
     try {
+      // Skip fetching if Supabase isn't configured
+      if (!supabaseConfigured) {
+        setLoading(false)
+        return
+      }
+
       const { data, error } = await supabase.from("site_content").select("section, content")
       if (error) throw error
       if (data && data.length > 0) {
