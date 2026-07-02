@@ -5,21 +5,21 @@ import { useState } from "react"
 import { useContent } from "./content-context"
 
 const photos = [
-  { src: "/photo/Snapchat-56070109.jpg", caption: "A moment I'll never forget" },
-  { src: "/photo/Snapchat-409129044.jpg", caption: "Just us, being us" },
-  { src: "/photo/Snapchat-627390407.jpg", caption: "Every smile with you is a treasure" },
-  { src: "/photo/Snapchat-883938423.jpg", caption: "My favorite view" },
-  { src: "/photo/Snapchat-973548843.jpg", caption: "Together is my favorite place" },
-  { src: "/photo/Snapchat-996879705.jpg", caption: "You make everything beautiful" },
-  { src: "/photo/Snapchat-1077329272.jpg", caption: "Captured happiness" },
-  { src: "/photo/Snapchat-1137848570.jpg", caption: "Forever grateful for you" },
-  { src: "/photo/Snapchat-1391196933.jpg", caption: "Us, in a frame" },
-  { src: "/photo/Snapchat-1415068960.jpg", caption: "My heart, in a photo" },
-  { src: "/photo/Snapchat-1574178237.jpg", caption: "Pure joy with you" },
-  { src: "/photo/Snapchat-1614855115.jpg", caption: "A love like ours" },
-  { src: "/photo/IMG-20260701-WA0005.jpg", caption: "Always and forever" },
-  { src: "/photo/Snapchat-1797008326.jpg", caption: "Being silly with you" },
-  { src: "/photo/Snapchat-1931337413.jpg", caption: "My favorite smile" },
+  { src: "/photo/Snapchat-56070109.jpg", caption: "bahbk ya meemy" },
+  { src: "/photo/Snapchat-409129044.jpg", caption: "mbhb4 8erek" },
+  { src: "/photo/Snapchat-627390407.jpg", caption: "ya rb atgwzek💍" },
+  { src: "/photo/Snapchat-883938423.jpg", caption: "b34\" hlawtek" },
+  { src: "/photo/Snapchat-973548843.jpg", caption: "ya khlathoo 3leky🥹" },
+  { src: "/photo/Snapchat-996879705.jpg", caption: "aywa ya 8azaal😉👄" },
+  { src: "/photo/Snapchat-1077329272.jpg", caption: "7ook4a el kalb😘🦮" },
+  { src: "/photo/Snapchat-1137848570.jpg", caption: "ykhrbeet gmalak🥵" },
+  { src: "/photo/Snapchat-1391196933.jpg", caption: "ykhrbeet hlawtek😲" },
+  { src: "/photo/Snapchat-1415068960.jpg", caption: "a8la ma lya" },
+  { src: "/photo/Snapchat-1574178237.jpg", caption: "b34\" kol haga feky" },
+  { src: "/photo/Snapchat-1614855115.jpg", caption: "om el 3yal🫶🏻" },
+  { src: "/photo/IMG-20260701-WA0005.jpg", caption: "a7la ayam hyaty btb\"a m3aky" },
+  { src: "/photo/Snapchat-1797008326.jpg", caption: "mhd4 bywhshny adek bgd" },
+  { src: "/photo/Snapchat-1931337413.jpg", caption: "bmoot feky ya meemy😍" },
 ]
 
 export function Gallery() {
