@@ -3,14 +3,10 @@
 import { useState, useEffect } from "react"
 import { X, Save, Settings, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react"
 import { useContent } from "./content-context"
-import { useAuth } from "./auth-context"
 import { supabase, supabaseConfigured } from "@/lib/supabase-client"
 
 export function ContentEditorButton() {
-  const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
-
-  if (!user) return null
 
   return (
     <>
