@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { useContent } from "./content-context"
@@ -33,7 +32,6 @@ export function Gallery() {
 
   const visible = photos.filter((p) => !errored[p.src])
 
-  // Map filtered index back to original photos array
   const openLightbox = (filteredIndex: number) => setLightboxIndex(filteredIndex)
   const closeLightbox = () => setLightboxIndex(null)
 
@@ -45,7 +43,6 @@ export function Gallery() {
     setLightboxIndex((prev) => (prev === null ? prev : (prev - 1 + visible.length) % visible.length))
   }, [visible.length])
 
-  // Keyboard navigation
   useEffect(() => {
     if (lightboxIndex === null) return
     const handleKey = (e: KeyboardEvent) => {
@@ -61,7 +58,6 @@ export function Gallery() {
     }
   }, [lightboxIndex, goNext, goPrev])
 
-  // Touch swipe support
   const touchStartX = useRef<number | null>(null)
   const touchEndX = useRef<number | null>(null)
 
@@ -114,16 +110,13 @@ export function Gallery() {
                 className="block w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
                 aria-label={`Open photo: ${photo.caption}`}
               >
-                <Image
+                <img
                   src={photo.src}
                   alt={photo.caption}
-                  width={600}
-                  height={i % 2 === 0 ? 800 : 600}
                   loading="lazy"
                   className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   onError={() => setErrored((prev) => ({ ...prev, [photo.src]: true }))}
                 />
-                {/* Gradient overlay with caption */}
                 <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4 pb-5 font-serif text-base text-white opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 sm:text-lg">
                   {photo.caption}
                 </figcaption>
@@ -152,7 +145,6 @@ export function Gallery() {
           aria-modal="true"
           aria-label="Photo viewer"
         >
-          {/* Close button */}
           <button
             onClick={closeLightbox}
             className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/25 sm:h-12 sm:w-12"
@@ -161,7 +153,6 @@ export function Gallery() {
             <X className="h-5 w-5" />
           </button>
 
-          {/* Previous */}
           {visible.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); goPrev() }}
@@ -172,16 +163,13 @@ export function Gallery() {
             </button>
           )}
 
-          {/* Image */}
           <div
             className="lightbox-image relative max-h-[85vh] max-w-[92vw] overflow-hidden rounded-2xl sm:rounded-3xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
+            <img
               src={visible[lightboxIndex].src}
               alt={visible[lightboxIndex].caption}
-              width={900}
-              height={1200}
               className="max-h-[85vh] w-auto max-w-[92vw] object-contain"
             />
             <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pb-5 text-center font-serif text-lg text-white">
@@ -189,7 +177,6 @@ export function Gallery() {
             </p>
           </div>
 
-          {/* Next */}
           {visible.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); goNext() }}
@@ -200,7 +187,6 @@ export function Gallery() {
             </button>
           )}
 
-          {/* Counter */}
           {visible.length > 1 && (
             <span className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-white/15 px-4 py-1.5 text-sm text-white backdrop-blur-md">
               {lightboxIndex + 1} / {visible.length}

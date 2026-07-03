@@ -5,8 +5,7 @@ import { useEffect, useRef } from "react"
 /**
  * Adds the `is-visible` class to the element (and optionally its children
  * via `.reveal-stagger`) when it scrolls into view. Respects
- * prefers-reduced-motion automatically — the IntersectionObserver still
- * fires, but the CSS disables the animation.
+ * prefers-reduced-motion automatically — the CSS disables the animation.
  */
 export function useReveal<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null)
@@ -24,11 +23,22 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
           }
         })
       },
-      { rootMargin: "60px", threshold: 0.12 }
+      { rootMargin: "0px", threshold: 0.01 }
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
+
+    // Fallback: if the observer hasn't fired after 500ms, show anyway.
+    // This handles edge cases where the element is already in viewport
+    // but the observer callback is delayed.
+    const timeout = setTimeout(() => {
+      el.classList.add("is-visible")
+    }, 500)
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(timeout)
+    }
   }, [])
 
   return ref
