@@ -19,7 +19,24 @@ export function LoginForm() {
 
     try {
       const { error } = await signIn(email, password)
-      if (error) setError("Invalid email or password. Please try again.")
+      if (error) {
+        // Provide specific error messages based on the error
+        const errorMessage = error.message?.toLowerCase() || ""
+        
+        if (errorMessage.includes("invalid login credentials")) {
+          setError("Invalid email or password. Please try again.")
+        } else if (errorMessage.includes("email not confirmed")) {
+          setError("Please verify your email before signing in. Check your inbox for a verification link.")
+        } else if (errorMessage.includes("user not found")) {
+          setError("No account found with this email. Please sign up first.")
+        } else {
+          setError(error.message || "Sign in failed. Please try again.")
+        }
+        console.log("[v0] Sign in error details:", error)
+      }
+    } catch (err) {
+      console.log("[v0] Unexpected error during sign in:", err)
+      setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)
     }
