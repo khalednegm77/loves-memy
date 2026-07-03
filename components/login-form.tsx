@@ -1,39 +1,25 @@
 "use client"
 
 import { useState } from "react"
-import { Heart, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { Heart, Mail, Eye, EyeOff } from "lucide-react"
 import { useAuth } from "./auth-context"
 
 export function LoginForm() {
-  const { signIn, signUp } = useAuth()
-  const [isSignUp, setIsSignUp] = useState(false)
+  const { signIn } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [info, setInfo] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
-    setInfo(null)
     setLoading(true)
 
     try {
-      if (isSignUp) {
-        const { error } = await signUp(email, password)
-        if (error) {
-          setError(error.message)
-        } else {
-          // Supabase may require email confirmation before the session is active
-          setInfo("Account created! Check your email for a confirmation link, then sign in.")
-          setIsSignUp(false)
-        }
-      } else {
-        const { error } = await signIn(email, password)
-        if (error) setError(error.message)
-      }
+      const { error } = await signIn(email, password)
+      if (error) setError("Invalid email or password. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -54,20 +40,13 @@ export function LoginForm() {
           <h1 className="font-serif text-3xl font-semibold text-foreground">
             khaled <span className="text-primary">&</span> amyy
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            {isSignUp ? "Create your account" : "Welcome to our story"}
-          </p>
+          <p className="mt-2 text-muted-foreground">Welcome to our story</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-lg">
           {error && (
             <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               {error}
-            </div>
-          )}
-          {info && (
-            <div className="rounded-lg bg-primary/10 p-3 text-sm text-primary">
-              {info}
             </div>
           )}
 
@@ -92,10 +71,9 @@ export function LoginForm() {
 
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium text-foreground">
-              Password
+              Secret word
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -103,8 +81,8 @@ export function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-10 text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
-                placeholder="••••••••"
+                className="w-full rounded-lg border border-input bg-background py-2.5 pl-4 pr-10 text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
+                placeholder="Enter the secret word"
               />
               <button
                 type="button"
@@ -121,34 +99,8 @@ export function LoginForm() {
             disabled={loading}
             className="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {loading ? "Please wait…" : isSignUp ? "Create Account" : "Sign In"}
+            {loading ? "Please wait…" : "Sign In"}
           </button>
-
-          <div className="text-center text-sm text-muted-foreground">
-            {isSignUp ? (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => { setIsSignUp(false); setError(null) }}
-                  className="text-primary hover:underline"
-                >
-                  Sign in
-                </button>
-              </>
-            ) : (
-              <>
-                Don&apos;t have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => { setIsSignUp(true); setError(null) }}
-                  className="text-primary hover:underline"
-                >
-                  Create one
-                </button>
-              </>
-            )}
-          </div>
         </form>
       </div>
     </div>

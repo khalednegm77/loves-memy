@@ -168,3 +168,91 @@
     @apply font-sans;
   }
 }
+
+/* ── Romantic palette tokens ─────────────────────────────── */
+:root {
+  --blush: oklch(0.92 0.035 15);
+  --blush-deep: oklch(0.85 0.05 15);
+  --champagne: oklch(0.90 0.04 75);
+  --champagne-deep: oklch(0.82 0.06 75);
+  --cream: oklch(0.97 0.015 60);
+  --soft-beige: oklch(0.94 0.012 50);
+  --rose-gold: oklch(0.75 0.08 35);
+}
+
+/* ── Scroll-triggered fade-up animation ─────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Stagger children inside a revealed container */
+.reveal-stagger > * {
+  opacity: 0;
+}
+
+.reveal-stagger.is-visible > * {
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reveal-stagger.is-visible > *:nth-child(1) { animation-delay: 0.05s; }
+.reveal-stagger.is-visible > *:nth-child(2) { animation-delay: 0.10s; }
+.reveal-stagger.is-visible > *:nth-child(3) { animation-delay: 0.15s; }
+.reveal-stagger.is-visible > *:nth-child(4) { animation-delay: 0.20s; }
+.reveal-stagger.is-visible > *:nth-child(5) { animation-delay: 0.25s; }
+.reveal-stagger.is-visible > *:nth-child(6) { animation-delay: 0.30s; }
+.reveal-stagger.is-visible > *:nth-child(7) { animation-delay: 0.35s; }
+.reveal-stagger.is-visible > *:nth-child(8) { animation-delay: 0.40s; }
+.reveal-stagger.is-visible > *:nth-child(9) { animation-delay: 0.45s; }
+.reveal-stagger.is-visible > *:nth-child(10) { animation-delay: 0.50s; }
+.reveal-stagger.is-visible > *:nth-child(11) { animation-delay: 0.55s; }
+.reveal-stagger.is-visible > *:nth-child(12) { animation-delay: 0.60s; }
+
+/* ── Lightbox transitions ───────────────────────────────── */
+@keyframes lightbox-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lightbox-zoom-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.lightbox-backdrop {
+  animation: lightbox-fade-in 0.3s ease forwards;
+}
+
+.lightbox-image {
+  animation: lightbox-zoom-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Respect reduced motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > *,
+  .lightbox-backdrop,
+  .lightbox-image {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  * {
+    scroll-behavior: auto !important;
+  }
+}
