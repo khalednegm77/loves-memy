@@ -26,12 +26,36 @@ export function Videos() {
   const videos = allVideos.filter((v) => !errored[v.src])
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const figureRefs = useRef<(HTMLElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [allMuted, setAllMuted] = useState(true)
+  const [visibleVideos, setVisibleVideos] = useState<Set<number>>(new Set())
+  const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set())
+  const containerRef = useRef<HTMLDivElement>(null)
   const sectionRef = useReveal<HTMLElement>()
 
-  // Single observer: autoplay when visible, pause when off-screen
+  // Lazy-load: mark videos as "visible" (src can be set) when near viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number((entry.target as HTMLElement).dataset.index)
+          setVisibleVideos((prev) => {
+            const next = new Set(prev)
+            if (entry.isIntersecting) next.add(index)
+            return next
+          })
+        })
+      },
+      { rootMargin: "300px", threshold: 0.05 }
+    )
+
+    const figures = containerRef.current?.querySelectorAll("[data-index]")
+    figures?.forEach((f) => observer.observe(f))
+
+    return () => observer.disconnect()
+  }, [videos.length])
+
+  // Autoplay / pause: play when visible, pause when off-screen
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -41,18 +65,27 @@ export function Videos() {
           if (!video) return
 
           if (entry.isIntersecting) {
-            video.play().catch(() => {})
+            setPlayingVideos((prev) => {
+              const next = new Set(prev)
+              next.add(index)
+              return next
+            })
+            void video.play().catch(() => {})
           } else {
+            setPlayingVideos((prev) => {
+              const next = new Set(prev)
+              next.delete(index)
+              return next
+            })
             video.pause()
           }
         })
       },
-      { rootMargin: "100px", threshold: 0.1 }
+      { threshold: 0.4 }
     )
 
-    figureRefs.current.forEach((fig) => {
-      if (fig) observer.observe(fig)
-    })
+    const figures = containerRef.current?.querySelectorAll("[data-index]")
+    figures?.forEach((f) => observer.observe(f))
 
     return () => observer.disconnect()
   }, [videos.length])
@@ -131,14 +164,18 @@ export function Videos() {
           </div>
 
           {/* Video grid — 1 col mobile, 2 col tablet, 3 col desktop */}
-          <div className="reveal-stagger grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+          <div
+            ref={containerRef}
+            className="reveal-stagger grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6"
+          >
             {videos.map((video, index) => {
               const isActive = activeIndex === index
+              const isVisible = visibleVideos.has(index)
+              const isPlaying = playingVideos.has(index)
               return (
                 <figure
                   key={video.src}
                   data-index={index}
-                  ref={(el) => { figureRefs.current[index] = el }}
                   className="group relative overflow-hidden rounded-2xl border border-[var(--champagne-deep)]/20 bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.12)] transition-all duration-500 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] sm:rounded-3xl"
                 >
                   <button
@@ -147,17 +184,21 @@ export function Videos() {
                     className="block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
                     aria-label={isActive ? `Mute ${video.caption}` : `Play ${video.caption} with sound`}
                   >
-                    <video
-                      ref={(el) => { videoRefs.current[index] = el }}
-                      src={video.src}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      onError={() => setErrored((prev) => ({ ...prev, [video.src]: true }))}
-                    />
+                    {isVisible ? (
+                      <video
+                        ref={(el) => { videoRefs.current[index] = el }}
+                        src={video.src}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        onError={() => setErrored((prev) => ({ ...prev, [video.src]: true }))}
+                      />
+                    ) : (
+                      <div className="aspect-[9/16] w-full animate-pulse bg-gradient-to-br from-[var(--cream)] to-[var(--soft-beige)]" />
+                    )}
 
                     {/* Play button overlay — desktop hover only */}
                     <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -174,6 +215,11 @@ export function Videos() {
                         <VolumeX className="h-5 w-5" aria-hidden="true" />
                       )}
                     </span>
+
+                    {/* Playing indicator dot */}
+                    {isPlaying && (
+                      <span className="absolute left-3 top-3 h-2.5 w-2.5 animate-pulse rounded-full bg-red-500 shadow-sm" />
+                    )}
                   </button>
 
                   {/* Caption with soft gradient */}
