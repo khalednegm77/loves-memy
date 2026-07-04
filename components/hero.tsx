@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { Heart } from "lucide-react"
 import { useContent } from "./content-context"
 
@@ -10,12 +9,10 @@ export function Hero() {
 
   return (
     <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden">
-      <Image
-        src="/photos/us-3.jpg"
+      <img
+        src="/photo/IMG-20260701-WA0005.jpg"
         alt="khaled and amyy close together in the sunlight"
-        fill
-        priority
-        className="object-cover object-[center_30%]"
+        className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
       />
       <div
         aria-hidden="true"
