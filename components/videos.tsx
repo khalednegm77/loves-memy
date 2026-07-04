@@ -194,7 +194,8 @@ export function Videos() {
                         muted
                         loop
                         playsInline
-                        preload="auto"
+                        preload="metadata"
+                        crossOrigin="anonymous"
                         className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         onError={() => {
                           const attempts = (retryCount[video.src] || 0) + 1
