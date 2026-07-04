@@ -1,3 +1,6 @@
 [build]
-command = "npm run build"
+command = "next build --webpack"
 publish = "out"
+
+[build.environment]
+NEXT_TELEMETRY_DISABLED = "true"
