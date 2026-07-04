@@ -24,7 +24,8 @@ export function Videos() {
   const { content } = useContent()
   const videosContent = content.videos || {}
   const [errored, setErrored] = useState<Record<string, boolean>>({})
-  const videos = allVideos.filter((v) => !errored[v.src])
+  const [retryCount, setRetryCount] = useState<Record<string, number>>({})
+  const videos = allVideos
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -195,7 +196,18 @@ export function Videos() {
                         playsInline
                         preload="auto"
                         className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        onError={() => setErrored((prev) => ({ ...prev, [video.src]: true }))}
+                        onError={() => {
+                          const attempts = (retryCount[video.src] || 0) + 1
+                          if (attempts <= 3) {
+                            setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
+                            const el = videoRefs.current[index]
+                            if (el) {
+                              setTimeout(() => { el.load() }, 800 * attempts)
+                            }
+                          } else {
+                            setErrored((prev) => ({ ...prev, [video.src]: true }))
+                          }
+                        }}
                       />
                     ) : (
                       <div className="aspect-[9/16] w-full animate-pulse bg-gradient-to-br from-[var(--cream)] to-[var(--soft-beige)]" />
@@ -220,6 +232,25 @@ export function Videos() {
                     {/* Playing indicator dot */}
                     {isPlaying && (
                       <span className="absolute left-3 top-3 h-2.5 w-2.5 animate-pulse rounded-full bg-red-500 shadow-sm" />
+                    )}
+
+                    {/* Retry overlay for failed videos */}
+                    {errored[video.src] && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-sm">
+                        <p className="px-4 text-center text-sm text-white/90">Couldn&apos;t load this video</p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setErrored((prev) => ({ ...prev, [video.src]: false }))
+                            setRetryCount((prev) => ({ ...prev, [video.src]: 0 }))
+                            const el = videoRefs.current[index]
+                            if (el) { el.load(); el.play().catch(() => {}) }
+                          }}
+                          className="rounded-full bg-white/90 px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-white"
+                        >
+                          Tap to retry
+                        </button>
+                      </div>
                     )}
                   </button>
 
