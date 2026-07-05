@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { useContent } from "./content-context"
@@ -114,11 +113,9 @@ export function Gallery() {
                 className="block w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
                 aria-label={`Open photo: ${photo.caption}`}
               >
-                <Image
+                <img
                   src={photo.src}
                   alt={photo.caption}
-                  width={600}
-                  height={i % 2 === 0 ? 800 : 600}
                   loading="lazy"
                   className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   onError={() => setErrored((prev) => ({ ...prev, [photo.src]: true }))}
@@ -177,11 +174,9 @@ export function Gallery() {
             className="lightbox-image relative max-h-[85vh] max-w-[92vw] overflow-hidden rounded-2xl sm:rounded-3xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
+            <img
               src={visible[lightboxIndex].src}
               alt={visible[lightboxIndex].caption}
-              width={900}
-              height={1200}
               className="max-h-[85vh] w-auto max-w-[92vw] object-contain"
             />
             <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pb-5 text-center font-serif text-lg text-white">
