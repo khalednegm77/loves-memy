@@ -207,12 +207,12 @@ export function Videos() {
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload="auto"
                       crossOrigin="anonymous"
-                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] bg-gray-900"
-                      onLoadedMetadata={() => {
+                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      onCanPlay={() => {
                         const el = videoRefs.current[index]
-                        if (el) {
+                        if (el && el.paused) {
                           el.play().catch(() => {})
                         }
                       }}
@@ -222,8 +222,11 @@ export function Videos() {
                           setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
                           const el = videoRefs.current[index]
                           if (el) {
-                            el.currentTime = 0
-                            setTimeout(() => { el.load(); el.play().catch(() => {}) }, 500 * attempts)
+                            setTimeout(() => { 
+                              el.currentTime = 0
+                              el.load()
+                              el.play().catch(() => {}) 
+                            }, 500 * attempts)
                           }
                         } else {
                           setErrored((prev) => ({ ...prev, [video.src]: true }))
