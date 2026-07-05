@@ -88,44 +88,57 @@ export function Gallery() {
     <section
       ref={sectionRef}
       id="gallery"
-      className="mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
+      className="scrapbook-page relative mx-auto w-full max-w-6xl overflow-hidden px-8 py-24 sm:px-12 sm:py-32"
     >
+      {/* Decorative flower */}
+      <img 
+        src="/decorations/flower-1.png" 
+        alt="" 
+        className="flower-decoration absolute top-20 right-10 w-20 h-20 opacity-80 sm:w-28 sm:h-28"
+      />
+      {/* Decorative leaf */}
+      <img 
+        src="/decorations/leaf-1.png" 
+        alt="" 
+        className="absolute bottom-32 left-5 w-24 h-24 opacity-70 sm:w-32 sm:h-32"
+        style={{ transform: 'scaleX(-1)' }}
+      />
+
       {/* Section header */}
-      <div className="mb-10 text-center sm:mb-14">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-[var(--rose-gold)] sm:text-sm">
-          {gallery.subtitle as string}
-        </p>
-        <h2 className="text-balance font-serif text-3xl font-semibold text-foreground sm:text-5xl">
-          {gallery.title as string}
+      <div className="mb-16 text-center sm:mb-20">
+        <h2 className="text-balance text-5xl font-bold text-foreground sm:text-6xl" style={{ fontFamily: 'var(--font-caveat)' }}>
+          Our favorite memories
         </h2>
+        <p className="mt-3 handwritten-caption text-xl text-[#8B7B72]">Those special moments we cherish forever 💕</p>
       </div>
 
       {visible.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((photo, i) => (
             <figure
               key={photo.src}
-              className="group relative block w-full overflow-hidden rounded-2xl border border-[var(--champagne-deep)]/20 bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.12)] transition-all duration-500 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] sm:rounded-3xl"
+              className="tape-photo group relative block w-full overflow-visible"
+              style={{ transform: `rotate(${i % 2 === 0 ? -2 : 2}deg)` }}
             >
               <button
                 type="button"
                 onClick={() => openLightbox(i)}
-                className="block w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
+                className="block w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2"
                 aria-label={`Open photo: ${photo.caption}`}
               >
                 <img
                   src={photo.src}
                   alt={photo.caption}
                   loading="eager"
-                  className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  style={{ height: i % 2 === 0 ? '400px' : '300px' }}
+                  className="w-full bg-white object-cover shadow-lg transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                  style={{ height: i % 2 === 0 ? '350px' : '300px' }}
                   onError={() => setErrored((prev) => ({ ...prev, [photo.src]: true }))}
                 />
-                {/* Gradient overlay with caption */}
-                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4 pb-5 font-serif text-base text-white opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 sm:text-lg">
-                  {photo.caption}
-                </figcaption>
               </button>
+              {/* Handwritten caption below photo */}
+              <figcaption className="mt-3 handwritten-caption text-center text-sm italic text-[#8B7B72]">
+                {photo.caption}
+              </figcaption>
             </figure>
           ))}
         </div>

@@ -1,13 +1,15 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;700&family=Indie+Flower&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-cormorant), 'Cormorant Garamond Fallback';
+  --font-heading: var(--font-caveat), 'Caveat Fallback';
   --font-serif: var(--font-cormorant), 'Cormorant Garamond Fallback';
   --font-sans: var(--font-jost), 'Jost Fallback';
+  --font-handwriting: var(--font-kalam), 'Kalam Fallback';
   --font-mono: var(--font-geist-mono), 'Geist Mono Fallback';
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -51,30 +53,30 @@
 
 :root {
   color-scheme: light;
-  --background: oklch(0.98 0.012 30);
-  --foreground: oklch(0.32 0.04 20);
-  --card: oklch(0.995 0.006 40);
-  --card-foreground: oklch(0.32 0.04 20);
-  --popover: oklch(0.995 0.006 40);
-  --popover-foreground: oklch(0.32 0.04 20);
-  --primary: oklch(0.55 0.12 18);
-  --primary-foreground: oklch(0.99 0.006 40);
-  --secondary: oklch(0.94 0.02 30);
-  --secondary-foreground: oklch(0.4 0.06 20);
-  --muted: oklch(0.95 0.015 35);
-  --muted-foreground: oklch(0.52 0.04 22);
-  --accent: oklch(0.78 0.07 35);
-  --accent-foreground: oklch(0.3 0.05 20);
+  --background: #F5EFE7;
+  --foreground: #4A3E37;
+  --card: #FEFBF7;
+  --card-foreground: #4A3E37;
+  --popover: #FEFBF7;
+  --popover-foreground: #4A3E37;
+  --primary: #D4A5A5;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0E5D8;
+  --secondary-foreground: #6B5B52;
+  --muted: #E8DED3;
+  --muted-foreground: #8B7B72;
+  --accent: #C09A7A;
+  --accent-foreground: #FFFFFF;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0.025 30);
-  --input: oklch(0.88 0.025 30);
-  --ring: oklch(0.55 0.12 18);
-  --chart-1: oklch(0.55 0.12 18);
-  --chart-2: oklch(0.7 0.09 30);
-  --chart-3: oklch(0.78 0.07 35);
-  --chart-4: oklch(0.85 0.05 40);
-  --chart-5: oklch(0.6 0.08 22);
-  --radius: 0.625rem;
+  --border: #E0D5CC;
+  --input: #E0D5CC;
+  --ring: #D4A5A5;
+  --chart-1: #D4A5A5;
+  --chart-2: #E8BBA5;
+  --chart-3: #F0D5C3;
+  --chart-4: #E8DED3;
+  --chart-5: #D4C4B8;
+  --radius: 0.375rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -83,6 +85,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --font-cormorant: 'Cormorant Garamond', serif;
+  --font-jost: 'Jost', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+  --font-caveat: 'Caveat', cursive;
+  --font-kalam: 'Kalam', cursive;
 }
 
 .dark {
@@ -255,4 +262,182 @@
   * {
     scroll-behavior: auto !important;
   }
+}
+
+/* ── SCRAPBOOK DESIGN ANIMATIONS ────────────────────────── */
+
+/* Page flip animation */
+@keyframes page-flip {
+  0% {
+    transform: rotateY(0) rotateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(90deg) rotateX(5deg);
+  }
+  100% {
+    transform: rotateY(0) rotateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes page-flip-reverse {
+  0% {
+    transform: rotateY(0) rotateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(-90deg) rotateX(-5deg);
+  }
+  100% {
+    transform: rotateY(0) rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* Tape effect animation */
+@keyframes tape-sway {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+/* Polaroid pop animation */
+@keyframes polaroid-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Flower float animation */
+@keyframes flower-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(-5deg);
+  }
+}
+
+/* Sticker bounce */
+@keyframes sticker-bounce {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+}
+
+/* Paper crease effect */
+.paper-crease {
+  background: linear-gradient(90deg, rgba(0,0,0,0.02) 0%, transparent 50%, rgba(0,0,0,0.02) 100%);
+}
+
+/* Scrapbook page styles */
+.scrapbook-page {
+  background: linear-gradient(135deg, rgba(212, 165, 165, 0.05) 0%, transparent 100%),
+              linear-gradient(45deg, transparent 0%, rgba(224, 213, 204, 0.08) 100%);
+  position: relative;
+  perspective: 1200px;
+}
+
+.scrapbook-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.5'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Taped photo effect */
+.tape-photo {
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(255, 255, 255, 0.5);
+}
+
+.tape-photo::before,
+.tape-photo::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+  opacity: 0.7;
+}
+
+.tape-photo::before {
+  width: 35px;
+  height: 8px;
+  top: -6px;
+  left: 30%;
+  transform: rotate(-25deg);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.tape-photo::after {
+  width: 35px;
+  height: 8px;
+  bottom: -6px;
+  right: 25%;
+  transform: rotate(20deg);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Polaroid frame */
+.polaroid-frame {
+  background: #FEFBF7;
+  padding: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(224, 213, 204, 0.5);
+}
+
+.polaroid-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.02), transparent);
+  border-radius: 2px;
+}
+
+/* Handwritten caption */
+.handwritten-caption {
+  font-family: var(--font-kalam), cursive;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: #6B5B52;
+  font-style: italic;
+}
+
+/* Decorative elements */
+.flower-decoration {
+  animation: flower-float 3s ease-in-out infinite;
+}
+
+.sticker-element {
+  animation: sticker-bounce 2.5s ease-in-out infinite;
+}
+
+.tape-decoration {
+  animation: tape-sway 2s ease-in-out infinite;
 }

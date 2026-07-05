@@ -130,21 +130,27 @@ export function Videos() {
     <section
       ref={sectionRef}
       id="videos"
-      className="mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
+      className="scrapbook-page relative mx-auto w-full max-w-6xl overflow-hidden px-8 py-24 sm:px-12 sm:py-32"
     >
+      {/* Decorative sticker heart */}
+      <img 
+        src="/decorations/sticker-heart.png" 
+        alt="" 
+        className="sticker-element absolute top-32 left-8 w-16 h-16 opacity-75 sm:w-20 sm:h-20"
+      />
+      {/* Decorative flower */}
+      <img 
+        src="/decorations/flower-1.png" 
+        alt="" 
+        className="flower-decoration absolute bottom-40 right-12 w-20 h-20 opacity-80 sm:w-28 sm:h-28"
+      />
+
       {/* Section header */}
-      <div className="mb-10 text-center sm:mb-14">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-[var(--rose-gold)] sm:text-sm">
-          {videosContent.subtitle as string}
-        </p>
-        <h2 className="text-balance font-serif text-3xl font-semibold text-foreground sm:text-5xl">
-          {videosContent.title as string}
+      <div className="mb-16 text-center sm:mb-20">
+        <h2 className="text-balance text-5xl font-bold text-foreground sm:text-6xl" style={{ fontFamily: 'var(--font-caveat)' }}>
+          Our memories, alive
         </h2>
-        {videos.length > 0 && (
-          <p className="mx-auto mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-            {videosContent.description as string}
-          </p>
-        )}
+        <p className="mt-3 handwritten-caption text-xl text-[#8B7B72]">Tap any clip to turn its sound on 🎬</p>
       </div>
 
       {videos.length > 0 ? (
@@ -168,18 +174,19 @@ export function Videos() {
           {/* Video grid — 1 col mobile, 2 col tablet, 3 col desktop */}
           <div
             ref={containerRef}
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6"
+            className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3"
           >
             {videos.map((video, index) => {
               const isActive = activeIndex === index
               const isVisible = visibleVideos.has(index)
               const isPlaying = playingVideos.has(index)
               return (
-                <figure
-                  key={video.src}
-                  data-index={index}
-                  className="group relative overflow-hidden rounded-2xl border border-[var(--champagne-deep)]/20 bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.12)] transition-all duration-500 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] sm:rounded-3xl"
-                >
+                <div key={video.src} className="flex flex-col items-center">
+                  <figure
+                    data-index={index}
+                    className="polaroid-frame group relative mx-auto w-full transition-transform duration-500 hover:shadow-2xl"
+                    style={{ transform: `rotate(${index % 3 === 0 ? -3 : index % 3 === 1 ? 2 : -1}deg)`, maxWidth: '280px' }}
+                  >
                   <button
                     type="button"
                     onClick={() => handleToggleSound(index)}
@@ -253,13 +260,13 @@ export function Videos() {
                       </div>
                     )}
                   </button>
-
-                  {/* Caption with soft gradient */}
-                  <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4 pb-5 font-serif text-base text-white sm:text-lg">
+                  </figure>
+                  {/* Handwritten caption below Polaroid */}
+                  <p className="mt-4 handwritten-caption text-sm italic text-[#8B7B72]">
                     {video.caption}
-                  </figcaption>
-                </figure>
-              )
+                  </p>
+                </div>
+            )
             })}
           </div>
         </>
