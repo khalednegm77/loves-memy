@@ -88,7 +88,7 @@ export function Gallery() {
     <section
       ref={sectionRef}
       id="gallery"
-      className="reveal mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
+      className="mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
     >
       {/* Section header */}
       <div className="mb-10 text-center sm:mb-14">
@@ -101,11 +101,11 @@ export function Gallery() {
       </div>
 
       {visible.length > 0 ? (
-        <div className="reveal-stagger columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((photo, i) => (
             <figure
               key={photo.src}
-              className="group relative block w-full break-inside-avoid overflow-hidden rounded-2xl border border-[var(--champagne-deep)]/20 bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.12)] transition-all duration-500 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] sm:rounded-3xl"
+              className="group relative block w-full overflow-hidden rounded-2xl border border-[var(--champagne-deep)]/20 bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.12)] transition-all duration-500 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] sm:rounded-3xl"
             >
               <button
                 type="button"
@@ -116,8 +116,9 @@ export function Gallery() {
                 <img
                   src={photo.src}
                   alt={photo.caption}
-                  loading="lazy"
-                  className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  loading="eager"
+                  className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  style={{ height: i % 2 === 0 ? '400px' : '300px' }}
                   onError={() => setErrored((prev) => ({ ...prev, [photo.src]: true }))}
                 />
                 {/* Gradient overlay with caption */}
@@ -177,6 +178,7 @@ export function Gallery() {
             <img
               src={visible[lightboxIndex].src}
               alt={visible[lightboxIndex].caption}
+              loading="eager"
               className="max-h-[85vh] w-auto max-w-[92vw] object-contain"
             />
             <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pb-5 text-center font-serif text-lg text-white">
