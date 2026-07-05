@@ -6,7 +6,6 @@ import { useContent } from "./content-context"
 import { useReveal } from "@/lib/use-reveal"
 
 const allVideos: { src: string; caption: string }[] = [
-  { src: "/videos/Snapchat-1109714542.mp4", caption: "Us, in motion" },
   { src: "/videos/Snapchat-1198825990.mp4", caption: "Caught mid-laugh" },
   { src: "/videos/Snapchat-1416293601.mp4", caption: "Just being us" },
   { src: "/videos/Snapchat-1712190426.mp4", caption: "Silly little moments" },
@@ -200,9 +199,10 @@ export function Videos() {
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload="auto"
+                      crossOrigin="anonymous"
                       className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      onError={() => {
+                      onError={(e) => {
                         const attempts = (retryCount[video.src] || 0) + 1
                         if (attempts <= 3) {
                           setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
@@ -239,20 +239,19 @@ export function Videos() {
 
                     {/* Retry overlay for failed videos */}
                     {errored[video.src] && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-sm">
+                      <div 
+                        className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-sm cursor-pointer"
+                        onClick={() => {
+                          setErrored((prev) => ({ ...prev, [video.src]: false }))
+                          setRetryCount((prev) => ({ ...prev, [video.src]: 0 }))
+                          const el = videoRefs.current[index]
+                          if (el) { el.load(); el.play().catch(() => {}) }
+                        }}
+                      >
                         <p className="px-4 text-center text-sm text-white/90">Couldn&apos;t load this video</p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setErrored((prev) => ({ ...prev, [video.src]: false }))
-                            setRetryCount((prev) => ({ ...prev, [video.src]: 0 }))
-                            const el = videoRefs.current[index]
-                            if (el) { el.load(); el.play().catch(() => {}) }
-                          }}
-                          className="rounded-full bg-white/90 px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-white"
-                        >
+                        <div className="rounded-full bg-white/90 px-5 py-2 text-sm font-medium text-black">
                           Tap to retry
-                        </button>
+                        </div>
                       </div>
                     )}
                   </button>
