@@ -130,7 +130,7 @@ export function Videos() {
     <section
       ref={sectionRef}
       id="videos"
-      className="reveal mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
+      className="mx-auto w-full max-w-6xl overflow-hidden px-5 py-16 sm:px-6 sm:py-24"
     >
       {/* Section header */}
       <div className="mb-10 text-center sm:mb-14">
@@ -168,7 +168,7 @@ export function Videos() {
           {/* Video grid — 1 col mobile, 2 col tablet, 3 col desktop */}
           <div
             ref={containerRef}
-            className="reveal-stagger grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6"
           >
             {videos.map((video, index) => {
               const isActive = activeIndex === index
