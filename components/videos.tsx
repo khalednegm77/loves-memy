@@ -193,32 +193,28 @@ export function Videos() {
                     className="block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
                     aria-label={isActive ? `Mute ${video.caption}` : `Play ${video.caption} with sound`}
                   >
-                    {isVisible ? (
-                      <video
-                        ref={(el) => { videoRefs.current[index] = el }}
-                        src={video.src}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        onError={() => {
-                          const attempts = (retryCount[video.src] || 0) + 1
-                          if (attempts <= 3) {
-                            setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
-                            const el = videoRefs.current[index]
-                            if (el) {
-                              setTimeout(() => { el.load() }, 800 * attempts)
-                            }
-                          } else {
-                            setErrored((prev) => ({ ...prev, [video.src]: true }))
+                    <video
+                      ref={(el) => { videoRefs.current[index] = el }}
+                      src={video.src}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      onError={() => {
+                        const attempts = (retryCount[video.src] || 0) + 1
+                        if (attempts <= 3) {
+                          setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
+                          const el = videoRefs.current[index]
+                          if (el) {
+                            setTimeout(() => { el.load() }, 800 * attempts)
                           }
-                        }}
-                      />
-                    ) : (
-                      <div className="aspect-[9/16] w-full animate-pulse bg-gradient-to-br from-[var(--cream)] to-[var(--soft-beige)]" />
-                    )}
+                        } else {
+                          setErrored((prev) => ({ ...prev, [video.src]: true }))
+                        }
+                      }}
+                    />
 
                     {/* Play button overlay — desktop hover only */}
                     <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
