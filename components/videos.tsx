@@ -13,7 +13,7 @@ const allVideos: { src: string; caption: string }[] = [
   { src: "/videos/Snapchat-1762725773.mp4", caption: "Our kind of fun" },
   { src: "/videos/Snapchat-285810565.mp4", caption: "Never a dull second" },
   { src: "/videos/Snapchat-386119415.mp4", caption: "Forever like this" },
-  { src: "/videos/Snapchat-444916219.mp4", caption: "My favorite person" },
+  { src: "/videos/Snapchat-444916219.mp4", caption: "My favorite laugh" },
   { src: "/videos/Snapchat-460482894.mp4", caption: "Always you and me" },
   { src: "/videos/Snapchat-524881199.mp4", caption: "My favorite person" },
   { src: "/videos/Snapchat-294982742.mp4", caption: "You make my heart smile" },
