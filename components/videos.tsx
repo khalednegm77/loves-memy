@@ -187,10 +187,17 @@ export function Videos() {
                     className="polaroid-frame group relative mx-auto w-full transition-transform duration-500 hover:shadow-2xl"
                     style={{ transform: `rotate(${index % 3 === 0 ? -3 : index % 3 === 1 ? 2 : -1}deg)`, maxWidth: '280px' }}
                   >
-                  <button
-                    type="button"
+                  <div
+                    className="group relative w-full cursor-pointer overflow-hidden"
                     onClick={() => handleToggleSound(index)}
-                    className="block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleToggleSound(index)
+                      }
+                    }}
                     aria-label={isActive ? `Mute ${video.caption}` : `Play ${video.caption} with sound`}
                   >
                     <video
@@ -243,7 +250,8 @@ export function Videos() {
                     {errored[video.src] && (
                       <div 
                         className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-sm cursor-pointer"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation()
                           setErrored((prev) => ({ ...prev, [video.src]: false }))
                           setRetryCount((prev) => ({ ...prev, [video.src]: 0 }))
                           const el = videoRefs.current[index]
@@ -256,7 +264,7 @@ export function Videos() {
                         </div>
                       </div>
                     )}
-                  </button>
+                  </div>
                   </figure>
                   {/* Handwritten caption below Polaroid */}
                   <p className="mt-4 handwritten-caption text-sm italic text-[#8B7B72]">
