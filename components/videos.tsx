@@ -15,7 +15,7 @@ const allVideos: { src: string; caption: string }[] = [
   { src: "/videos/Snapchat-386119415.mp4", caption: "Forever like this" },
   { src: "/videos/Snapchat-444916219.mp4", caption: "My favorite person" },
   { src: "/videos/Snapchat-460482894.mp4", caption: "Always you and me" },
-  { src: "/videos/Snapchat-524881199.mp4", caption: "My favorite view" },
+  { src: "/videos/Snapchat-524881199.mp4", caption: "My favorite person" },
   { src: "/videos/Snapchat-294982742.mp4", caption: "You make my heart smile" },
   { src: "/videos/VID-20260701-WA0010.mp4", caption: "Together, always" },
 ]

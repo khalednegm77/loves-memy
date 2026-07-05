@@ -14,7 +14,6 @@ import { OurTimeline } from "./our-timeline"
 import { BucketListSection } from "./bucket-list-section"
 import { Closing } from "./closing"
 import { DayLikeToday } from "./day-like-today"
-import { ContentEditorButton } from "./content-editor-modal"
 import { useState, useEffect } from "react"
 import { LogOut } from "lucide-react"
 
@@ -71,7 +70,6 @@ export function AppWrapper() {
       <DayLikeToday />
 
       {/* Floating action buttons */}
-      <ContentEditorButton />
       <button
         onClick={signOut}
         className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-card shadow-lg border border-border text-foreground transition-transform hover:scale-110"
