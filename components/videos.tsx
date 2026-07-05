@@ -6,6 +6,7 @@ import { useContent } from "./content-context"
 import { useReveal } from "@/lib/use-reveal"
 
 const allVideos: { src: string; caption: string }[] = [
+  { src: "/videos/Snapchat-1109714542.mp4", caption: "Us, in motion" },
   { src: "/videos/Snapchat-1198825990.mp4", caption: "Caught mid-laugh" },
   { src: "/videos/Snapchat-1416293601.mp4", caption: "Just being us" },
   { src: "/videos/Snapchat-1712190426.mp4", caption: "Silly little moments" },
@@ -199,16 +200,17 @@ export function Videos() {
                       muted
                       loop
                       playsInline
-                      preload="auto"
+                      preload="none"
                       crossOrigin="anonymous"
                       className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      onError={(e) => {
+                      onError={() => {
                         const attempts = (retryCount[video.src] || 0) + 1
                         if (attempts <= 3) {
                           setRetryCount((prev) => ({ ...prev, [video.src]: attempts }))
                           const el = videoRefs.current[index]
                           if (el) {
-                            setTimeout(() => { el.load() }, 800 * attempts)
+                            el.currentTime = 0
+                            setTimeout(() => { el.play().catch(() => {}) }, 500 * attempts)
                           }
                         } else {
                           setErrored((prev) => ({ ...prev, [video.src]: true }))
