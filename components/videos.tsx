@@ -72,7 +72,7 @@ export function Videos() {
               next.add(index)
               return next
             })
-            void video.play().catch(() => {})
+            video.play().catch(() => {})
           } else {
             setPlayingVideos((prev) => {
               const next = new Set(prev)
@@ -112,7 +112,7 @@ export function Videos() {
       })
       video.muted = false
       video.volume = 1
-      void video.play()
+      video.play().catch(() => {})
       setActiveIndex(index)
       setAllMuted(false)
     }
