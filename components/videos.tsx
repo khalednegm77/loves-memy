@@ -207,9 +207,15 @@ export function Videos() {
                       muted
                       loop
                       playsInline
-                      preload="none"
+                      preload="metadata"
                       crossOrigin="anonymous"
-                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      className="aspect-[9/16] h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] bg-gray-900"
+                      onLoadedMetadata={() => {
+                        const el = videoRefs.current[index]
+                        if (el) {
+                          el.play().catch(() => {})
+                        }
+                      }}
                       onError={() => {
                         const attempts = (retryCount[video.src] || 0) + 1
                         if (attempts <= 3) {
@@ -217,7 +223,7 @@ export function Videos() {
                           const el = videoRefs.current[index]
                           if (el) {
                             el.currentTime = 0
-                            setTimeout(() => { el.play().catch(() => {}) }, 500 * attempts)
+                            setTimeout(() => { el.load(); el.play().catch(() => {}) }, 500 * attempts)
                           }
                         } else {
                           setErrored((prev) => ({ ...prev, [video.src]: true }))
