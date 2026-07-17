@@ -186,7 +186,7 @@ export function Videos() {
                     className="block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rose-gold)] focus-visible:ring-offset-2"
                     aria-label={isActive ? `Mute ${video.caption}` : `Play ${video.caption} with sound`}
                   >
-                    {true ? (
+                    {isVisible ? (
                       <video
                         ref={(el) => { videoRefs.current[index] = el }}
                         src={video.src}
